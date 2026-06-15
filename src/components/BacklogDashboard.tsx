@@ -240,17 +240,11 @@ export function BacklogDashboard() {
         </header>
 
         {/* KPIs */}
-        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
           <Kpi
             label="Tickets em backlog"
             value={stats.total}
             icon={<Inbox className="h-5 w-5" />}
-          />
-          <Kpi
-            label="SLA vencido"
-            value={stats.slaVencido}
-            icon={<CircleAlert className="h-5 w-5" />}
-            tone={stats.slaVencido > 0 ? "danger" : "ok"}
           />
           <Kpi
             label="Críticos 60+ dias"
