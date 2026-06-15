@@ -145,7 +145,6 @@ export function BacklogDashboard() {
       "60+": 0,
     };
     for (const t of all) byBucket[t.bucket]++;
-    const slaVencido = all.filter((t) => t.slaStatus === "Vencido").length;
     const critical = all.filter((t) => t.bucket === "60+");
     const agents = Array.from(new Set(all.map((t) => t.assignee))).sort();
 
@@ -162,10 +161,23 @@ export function BacklogDashboard() {
       .sort((a, b) => (b.total as number) - (a.total as number))
       .slice(0, 12);
 
+    const topReasons = groupCount(all, (t) => t.reason).slice(0, 10).map((r) => r.name);
+    const reasonBuckets = Array.from(
+      all.reduce((m, t) => {
+        if (!topReasons.includes(t.reason)) return m;
+        if (!m.has(t.reason)) m.set(t.reason, { name: t.reason, total: 0 } as Record<string, number | string>);
+        const row = m.get(t.reason)!;
+        (row[t.bucket] as number) = ((row[t.bucket] as number) ?? 0) + 1;
+        (row.total as number) = (row.total as number) + 1;
+        return m;
+      }, new Map<string, Record<string, number | string>>())
+        .values(),
+    )
+      .sort((a, b) => (b.total as number) - (a.total as number));
+
     return {
       total: all.length,
       byBucket,
-      slaVencido,
       critical,
       agents,
       byReason: groupCount(all, (t) => t.reason).slice(0, 8),
@@ -173,6 +185,7 @@ export function BacklogDashboard() {
       byStatus: groupCount(all, (t) => t.status),
       byGroup: groupCount(all, (t) => t.group),
       agentBuckets,
+      reasonBuckets,
     };
   }, [data]);
 
