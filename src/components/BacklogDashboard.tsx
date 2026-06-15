@@ -472,6 +472,44 @@ export function BacklogDashboard() {
           </Card>
         </div>
 
+        {/* Reason by age */}
+        <Section title="Motivos de contato por idade do backlog" subtitle="Top motivos distribuídos por faixa de dias">
+          <Card>
+            <div className="h-[380px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.reasonBuckets} layout="vertical" margin={{ left: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis
+                    dataKey="name"
+                    type="category"
+                    stroke="var(--muted-foreground)"
+                    fontSize={11}
+                    width={180}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  {BUCKETS.map((b) => (
+                    <Bar
+                      key={b}
+                      dataKey={b}
+                      stackId="a"
+                      fill={BUCKET_COLORS[b]}
+                      name={BUCKET_LABEL[b]}
+                    />
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </Section>
+
         {/* Filters + Table */}
         <Section
           title="Tickets"
