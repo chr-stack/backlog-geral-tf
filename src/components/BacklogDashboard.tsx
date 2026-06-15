@@ -190,6 +190,23 @@ export function BacklogDashboard() {
     };
   }, [data]);
 
+  const reasonChartData = useMemo(() => {
+    if (!data) return [];
+    const pool = reasonAgeFilter === "all" ? data.tickets : data.tickets.filter((t) => t.bucket === reasonAgeFilter);
+    const topReasons = groupCount(pool, (t) => t.reason).slice(0, 10).map((r) => r.name);
+    return Array.from(
+      pool.reduce((m, t) => {
+        if (!topReasons.includes(t.reason)) return m;
+        if (!m.has(t.reason)) m.set(t.reason, { name: t.reason, total: 0 } as Record<string, number | string>);
+        const row = m.get(t.reason)!;
+        (row[t.bucket] as number) = ((row[t.bucket] as number) ?? 0) + 1;
+        (row.total as number) = (row.total as number) + 1;
+        return m;
+      }, new Map<string, Record<string, number | string>>())
+        .values(),
+    ).sort((a, b) => (b.total as number) - (a.total as number));
+  }, [data, reasonAgeFilter]);
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center text-muted-foreground">
