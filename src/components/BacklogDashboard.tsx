@@ -77,6 +77,7 @@ export function BacklogDashboard() {
   const [bucketFilter, setBucketFilter] = useState<AgeBucket | "all">("all");
   const [agentFilter, setAgentFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const [reasonAgeFilter, setReasonAgeFilter] = useState<AgeBucket | "all">("all");
 
   useEffect(() => {
     const cached = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
@@ -188,6 +189,23 @@ export function BacklogDashboard() {
       reasonBuckets,
     };
   }, [data]);
+
+  const reasonChartData = useMemo(() => {
+    if (!data) return [];
+    const pool = reasonAgeFilter === "all" ? data.tickets : data.tickets.filter((t) => t.bucket === reasonAgeFilter);
+    const topReasons = groupCount(pool, (t) => t.reason).slice(0, 10).map((r) => r.name);
+    return Array.from(
+      pool.reduce((m, t) => {
+        if (!topReasons.includes(t.reason)) return m;
+        if (!m.has(t.reason)) m.set(t.reason, { name: t.reason, total: 0 } as Record<string, number | string>);
+        const row = m.get(t.reason)!;
+        (row[t.bucket] as number) = ((row[t.bucket] as number) ?? 0) + 1;
+        (row.total as number) = (row.total as number) + 1;
+        return m;
+      }, new Map<string, Record<string, number | string>>())
+        .values(),
+    ).sort((a, b) => (b.total as number) - (a.total as number));
+  }, [data, reasonAgeFilter]);
 
   if (loading) {
     return (
@@ -473,11 +491,29 @@ export function BacklogDashboard() {
         </div>
 
         {/* Reason by age */}
-        <Section title="Motivos de contato por idade do backlog" subtitle="Top motivos distribuídos por faixa de dias">
+        <Section
+          title="Motivos de contato por idade do backlog"
+          subtitle="Top motivos distribuídos por faixa de dias"
+        >
           <Card>
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Filtrar por idade:</span>
+              <select
+                value={reasonAgeFilter}
+                onChange={(e) => setReasonAgeFilter(e.target.value as AgeBucket | "all")}
+                className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm outline-none focus:border-primary"
+              >
+                <option value="all">Todas as idades</option>
+                {BUCKETS.map((b) => (
+                  <option key={b} value={b}>
+                    {BUCKET_LABEL[b]}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="h-[380px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.reasonBuckets} layout="vertical" margin={{ left: 20 }}>
+                <BarChart data={reasonChartData} layout="vertical" margin={{ left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
                   <YAxis
