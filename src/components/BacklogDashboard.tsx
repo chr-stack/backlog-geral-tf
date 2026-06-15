@@ -491,11 +491,29 @@ export function BacklogDashboard() {
         </div>
 
         {/* Reason by age */}
-        <Section title="Motivos de contato por idade do backlog" subtitle="Top motivos distribuídos por faixa de dias">
+        <Section
+          title="Motivos de contato por idade do backlog"
+          subtitle="Top motivos distribuídos por faixa de dias"
+        >
           <Card>
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Filtrar por idade:</span>
+              <select
+                value={reasonAgeFilter}
+                onChange={(e) => setReasonAgeFilter(e.target.value as AgeBucket | "all")}
+                className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm outline-none focus:border-primary"
+              >
+                <option value="all">Todas as idades</option>
+                {BUCKETS.map((b) => (
+                  <option key={b} value={b}>
+                    {BUCKET_LABEL[b]}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="h-[380px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.reasonBuckets} layout="vertical" margin={{ left: 20 }}>
+                <BarChart data={reasonChartData} layout="vertical" margin={{ left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
                   <YAxis
