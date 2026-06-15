@@ -145,7 +145,6 @@ export function BacklogDashboard() {
       "60+": 0,
     };
     for (const t of all) byBucket[t.bucket]++;
-    const slaVencido = all.filter((t) => t.slaStatus === "Vencido").length;
     const critical = all.filter((t) => t.bucket === "60+");
     const agents = Array.from(new Set(all.map((t) => t.assignee))).sort();
 
@@ -162,10 +161,23 @@ export function BacklogDashboard() {
       .sort((a, b) => (b.total as number) - (a.total as number))
       .slice(0, 12);
 
+    const topReasons = groupCount(all, (t) => t.reason).slice(0, 10).map((r) => r.name);
+    const reasonBuckets = Array.from(
+      all.reduce((m, t) => {
+        if (!topReasons.includes(t.reason)) return m;
+        if (!m.has(t.reason)) m.set(t.reason, { name: t.reason, total: 0 } as Record<string, number | string>);
+        const row = m.get(t.reason)!;
+        (row[t.bucket] as number) = ((row[t.bucket] as number) ?? 0) + 1;
+        (row.total as number) = (row.total as number) + 1;
+        return m;
+      }, new Map<string, Record<string, number | string>>())
+        .values(),
+    )
+      .sort((a, b) => (b.total as number) - (a.total as number));
+
     return {
       total: all.length,
       byBucket,
-      slaVencido,
       critical,
       agents,
       byReason: groupCount(all, (t) => t.reason).slice(0, 8),
@@ -173,6 +185,7 @@ export function BacklogDashboard() {
       byStatus: groupCount(all, (t) => t.status),
       byGroup: groupCount(all, (t) => t.group),
       agentBuckets,
+      reasonBuckets,
     };
   }, [data]);
 
@@ -227,17 +240,11 @@ export function BacklogDashboard() {
         </header>
 
         {/* KPIs */}
-        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
           <Kpi
             label="Tickets em backlog"
             value={stats.total}
             icon={<Inbox className="h-5 w-5" />}
-          />
-          <Kpi
-            label="SLA vencido"
-            value={stats.slaVencido}
-            icon={<CircleAlert className="h-5 w-5" />}
-            tone={stats.slaVencido > 0 ? "danger" : "ok"}
           />
           <Kpi
             label="Críticos 60+ dias"
@@ -464,6 +471,44 @@ export function BacklogDashboard() {
             </div>
           </Card>
         </div>
+
+        {/* Reason by age */}
+        <Section title="Motivos de contato por idade do backlog" subtitle="Top motivos distribuídos por faixa de dias">
+          <Card>
+            <div className="h-[380px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.reasonBuckets} layout="vertical" margin={{ left: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis
+                    dataKey="name"
+                    type="category"
+                    stroke="var(--muted-foreground)"
+                    fontSize={11}
+                    width={180}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  {BUCKETS.map((b) => (
+                    <Bar
+                      key={b}
+                      dataKey={b}
+                      stackId="a"
+                      fill={BUCKET_COLORS[b]}
+                      name={BUCKET_LABEL[b]}
+                    />
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </Section>
 
         {/* Filters + Table */}
         <Section
