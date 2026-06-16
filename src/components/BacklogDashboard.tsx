@@ -209,6 +209,12 @@ export function BacklogDashboard() {
     ).sort((a, b) => (b.total as number) - (a.total as number));
   }, [data, reasonAgeFilter]);
 
+  const topReasonData = useMemo(() => {
+    if (!data) return [];
+    const pool = reasonGroupFilter === "all" ? data.tickets : data.tickets.filter((t) => t.group === reasonGroupFilter);
+    return groupCount(pool, (t) => t.reason).slice(0, 5);
+  }, [data, reasonGroupFilter]);
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center text-muted-foreground">
