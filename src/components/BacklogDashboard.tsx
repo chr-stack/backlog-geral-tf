@@ -756,8 +756,9 @@ function ChannelLabel(props: any) {
 
 function StackTotalLabel(props: any) {
   const { x, y, width, height, dataKey, payload } = props;
-  const lastBucket = [...BUCKETS].reverse().find((b) => (payload[b] as number) > 0);
-  if (dataKey !== lastBucket) return null;
+  if (!payload) return null;
+  const lastBucket = [...BUCKETS].reverse().find((b) => ((payload[b] as number) ?? 0) > 0);
+  if (!lastBucket || dataKey !== lastBucket) return null;
   const total = payload.total as number;
   const text = String(total);
   const approxTextWidth = text.length * 7;
