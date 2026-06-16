@@ -470,10 +470,16 @@ export function BacklogDashboard() {
             <CardTitle>Canal de atendimento</CardTitle>
             <div className="mt-4 h-[320px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.byChannel}>
+                <BarChart data={stats.byChannel} layout="vertical" margin={{ left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis dataKey="name" stroke="var(--muted-foreground)" fontSize={12} />
-                  <YAxis stroke="var(--muted-foreground)" fontSize={12} />
+                  <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis
+                    dataKey="name"
+                    type="category"
+                    stroke="var(--muted-foreground)"
+                    fontSize={11}
+                    width={160}
+                  />
                   <Tooltip
                     contentStyle={{
                       background: "var(--popover)",
@@ -481,7 +487,9 @@ export function BacklogDashboard() {
                       borderRadius: 12,
                     }}
                   />
-                  <Bar dataKey="value" fill="var(--chart-2)" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="value" fill="var(--chart-2)" radius={[0, 6, 6, 0]}>
+                    <LabelList dataKey="value" position="insideRight" className="fill-primary-foreground text-[11px]" />
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>

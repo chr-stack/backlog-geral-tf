@@ -74,6 +74,11 @@ export function parseWorkbook(buf: ArrayBuffer): { tickets: Ticket[]; referenceD
         ? "Vencido"
         : "No prazo"
       : "—";
+    const group = String(r["Grupo"] ?? "").trim() || "—";
+    let reason = String(r["Motivo de Contato "] ?? r["Motivo de Contato"] ?? "").trim() || "—";
+    if (group === "Lojas/Franquias" && (reason === "" || reason === "—")) {
+      reason = "Análise de Lojas";
+    }
     return {
       id: String(r["ID"] ?? ""),
       status: String(r["Status"] ?? "").trim() || "—",
@@ -81,10 +86,10 @@ export function parseWorkbook(buf: ArrayBuffer): { tickets: Ticket[]; referenceD
       requestedAt,
       updatedAt: toDate(r["Atualizado"]),
       assignee: String(r["Atribuído"] ?? "").trim() || "Sem atribuição",
-      reason: String(r["Motivo de Contato "] ?? r["Motivo de Contato"] ?? "").trim() || "—",
+      reason,
       subject: String(r["Assunto"] ?? "").trim(),
       channel: String(r["[TF] Canal de Atendimento"] ?? "").trim() || "—",
-      group: String(r["Grupo"] ?? "").trim() || "—",
+      group,
       orderNumber: String(r["Nº Pedido"] ?? "").trim(),
       ageDays,
       bucket: bucketize(ageDays),
