@@ -380,7 +380,9 @@ export function BacklogDashboard() {
                       stackId="a"
                       fill={BUCKET_COLORS[b]}
                       name={BUCKET_LABEL[b]}
-                    />
+                    >
+                      <LabelList dataKey={b} content={<StackTotalLabel />} />
+                    </Bar>
                   ))}
                 </BarChart>
               </ResponsiveContainer>
