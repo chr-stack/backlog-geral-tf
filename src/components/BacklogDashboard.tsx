@@ -468,9 +468,9 @@ export function BacklogDashboard() {
 
           <Card>
             <CardTitle>Canal de atendimento</CardTitle>
-            <div className="mt-4 h-[320px]">
+            <div className="mt-4 flex h-[320px] items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.byChannel} layout="vertical" margin={{ left: 20 }}>
+                <BarChart data={stats.byChannel} layout="vertical" margin={{ top: 30, bottom: 30, left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
                   <YAxis
@@ -488,7 +488,7 @@ export function BacklogDashboard() {
                     }}
                   />
                   <Bar dataKey="value" fill="var(--chart-2)" radius={[0, 6, 6, 0]}>
-                    <LabelList dataKey="value" position="insideRight" className="fill-primary-foreground text-[11px]" />
+                    <LabelList dataKey="value" content={<ChannelLabel />} />
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -711,6 +711,24 @@ export function BacklogDashboard() {
         </Section>
       </div>
     </div>
+  );
+}
+
+function ChannelLabel(props: any) {
+  const { x, y, width, height, value } = props;
+  const text = String(value);
+  const approxTextWidth = text.length * 7;
+  if (width < approxTextWidth + 10) {
+    return (
+      <text x={x + width + 6} y={y + height / 2} dy={3} fill="var(--foreground)" fontSize={11} textAnchor="start">
+        {value}
+      </text>
+    );
+  }
+  return (
+    <text x={x + width - 6} y={y + height / 2} dy={3} fill="var(--primary-foreground)" fontSize={11} textAnchor="end">
+      {value}
+    </text>
   );
 }
 
