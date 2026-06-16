@@ -714,6 +714,24 @@ export function BacklogDashboard() {
   );
 }
 
+function ChannelLabel(props: any) {
+  const { x, y, width, height, value } = props;
+  const text = String(value);
+  const approxTextWidth = text.length * 7;
+  if (width < approxTextWidth + 10) {
+    return (
+      <text x={x + width + 6} y={y + height / 2} dy={3} fill="var(--foreground)" fontSize={11} textAnchor="start">
+        {value}
+      </text>
+    );
+  }
+  return (
+    <text x={x + width - 6} y={y + height / 2} dy={3} fill="var(--primary-foreground)" fontSize={11} textAnchor="end">
+      {value}
+    </text>
+  );
+}
+
 function Kpi({
   label,
   value,
