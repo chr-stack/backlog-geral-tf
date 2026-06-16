@@ -79,6 +79,7 @@ export function BacklogDashboard() {
   const [agentFilter, setAgentFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [reasonAgeFilter, setReasonAgeFilter] = useState<AgeBucket | "all">("all");
+  const [reasonGroupFilter, setReasonGroupFilter] = useState<string>("all");
 
   useEffect(() => {
     const cached = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
