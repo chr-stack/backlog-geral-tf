@@ -421,10 +421,27 @@ export function BacklogDashboard() {
           </Card>
 
           <Card>
-            <CardTitle>Top motivos de contato</CardTitle>
-            <div className="mt-4 h-[320px]">
+            <div className="flex items-center justify-between">
+              <CardTitle>Top motivos de contato</CardTitle>
+            </div>
+            <div className="mb-3 mt-3 flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Filtrar por grupo:</span>
+              <select
+                value={reasonGroupFilter}
+                onChange={(e) => setReasonGroupFilter(e.target.value)}
+                className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm outline-none focus:border-primary"
+              >
+                <option value="all">Todos os grupos</option>
+                {stats.byGroup.map((g) => (
+                  <option key={g.name} value={g.name}>
+                    {g.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="h-[320px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.byReason} layout="vertical" margin={{ left: 20 }}>
+                <BarChart data={topReasonData} layout="vertical" margin={{ left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
                   <YAxis
@@ -441,7 +458,9 @@ export function BacklogDashboard() {
                       borderRadius: 12,
                     }}
                   />
-                  <Bar dataKey="value" fill="var(--chart-1)" radius={[0, 6, 6, 0]} />
+                  <Bar dataKey="value" fill="var(--chart-1)" radius={[0, 6, 6, 0]}>
+                    <LabelList dataKey="value" position="insideRight" className="fill-primary-foreground text-[11px]" />
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
