@@ -380,7 +380,9 @@ export function BacklogDashboard() {
                       stackId="a"
                       fill={BUCKET_COLORS[b]}
                       name={BUCKET_LABEL[b]}
-                    />
+                    >
+                      <LabelList dataKey={b} content={<StackTotalLabel />} />
+                    </Bar>
                   ))}
                 </BarChart>
               </ResponsiveContainer>
@@ -573,7 +575,9 @@ export function BacklogDashboard() {
                       stackId="a"
                       fill={BUCKET_COLORS[b]}
                       name={BUCKET_LABEL[b]}
-                    />
+                    >
+                      <LabelList dataKey={b} content={<StackTotalLabel />} />
+                    </Bar>
                   ))}
                 </BarChart>
               </ResponsiveContainer>
@@ -746,6 +750,27 @@ function ChannelLabel(props: any) {
   return (
     <text x={x + width - 14} y={y + height / 2} dy={3} fill="var(--primary-foreground)" fontSize={11} textAnchor="end">
       {value}
+    </text>
+  );
+}
+
+function StackTotalLabel(props: any) {
+  const { x, y, width, height, dataKey, payload } = props;
+  const lastBucket = [...BUCKETS].reverse().find((b) => (payload[b] as number) > 0);
+  if (dataKey !== lastBucket) return null;
+  const total = payload.total as number;
+  const text = String(total);
+  const approxTextWidth = text.length * 7;
+  if (width < approxTextWidth + 10) {
+    return (
+      <text x={x + width + 6} y={y + height / 2} dy={3} fill="var(--foreground)" fontSize={11} textAnchor="start">
+        {total}
+      </text>
+    );
+  }
+  return (
+    <text x={x + width - 6} y={y + height / 2} dy={3} fill="var(--primary-foreground)" fontSize={11} textAnchor="end">
+      {total}
     </text>
   );
 }
