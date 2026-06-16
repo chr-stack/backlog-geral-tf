@@ -183,7 +183,7 @@ export function BacklogDashboard() {
       byBucket,
       critical,
       agents,
-      byReason: groupCount(all, (t) => t.reason).slice(0, 8),
+      byReason: groupCount(all, (t) => t.reason).slice(0, 5),
       byChannel: groupCount(all, (t) => t.channel),
       byStatus: groupCount(all, (t) => t.status),
       byGroup: groupCount(all, (t) => t.group),
