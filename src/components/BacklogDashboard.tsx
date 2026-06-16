@@ -466,11 +466,11 @@ export function BacklogDashboard() {
             </div>
           </Card>
 
-          <Card>
+          <Card className="flex flex-col">
             <CardTitle>Canal de atendimento</CardTitle>
-            <div className="mt-4 flex h-[320px] items-center justify-center">
+            <div className="mt-4 flex flex-1 items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.byChannel} layout="vertical" margin={{ top: 30, bottom: 30, left: 20 }}>
+                <BarChart data={stats.byChannel} layout="vertical" margin={{ left: 20, right: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
                   <YAxis
