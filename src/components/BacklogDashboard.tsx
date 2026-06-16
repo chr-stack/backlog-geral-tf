@@ -459,7 +459,7 @@ export function BacklogDashboard() {
                     }}
                   />
                   <Bar dataKey="value" fill="var(--chart-1)" radius={[0, 6, 6, 0]}>
-                    <LabelList dataKey="value" position="insideRight" className="fill-primary-foreground text-[11px]" />
+                    <LabelList dataKey="value" content={<ReasonLabel />} />
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
