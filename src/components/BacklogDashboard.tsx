@@ -755,22 +755,27 @@ function ChannelLabel(props: any) {
 }
 
 function StackTotalLabel(props: any) {
-  const { x, y, width, height, dataKey, payload } = props;
-  if (!payload) return null;
-  const lastBucket = [...BUCKETS].reverse().find((b) => ((payload[b] as number) ?? 0) > 0);
+  const { x, y, width, height, dataKey } = props;
+  const row = props.payload ?? props;
+  if (!row || typeof row !== "object") return null;
+  const lastBucket = [...BUCKETS].reverse().find((b) => (Number(row[b]) || 0) > 0);
   if (!lastBucket || dataKey !== lastBucket) return null;
-  const total = payload.total as number;
+  const total =
+    typeof row.total === "number"
+      ? row.total
+      : BUCKETS.reduce((s, b) => s + (Number(row[b]) || 0), 0);
+  if (!total) return null;
   const text = String(total);
   const approxTextWidth = text.length * 7;
-  if (width < approxTextWidth + 10) {
+  if (Number(width) < approxTextWidth + 10) {
     return (
-      <text x={x + width + 6} y={y + height / 2} dy={3} fill="var(--foreground)" fontSize={11} textAnchor="start">
+      <text x={Number(x) + Number(width) + 6} y={Number(y) + Number(height) / 2} dy={4} fill="var(--foreground)" fontSize={11} fontWeight={600} textAnchor="start">
         {total}
       </text>
     );
   }
   return (
-    <text x={x + width - 6} y={y + height / 2} dy={3} fill="var(--primary-foreground)" fontSize={11} textAnchor="end">
+    <text x={Number(x) + Number(width) - 6} y={Number(y) + Number(height) / 2} dy={4} fill="var(--primary-foreground)" fontSize={11} fontWeight={600} textAnchor="end">
       {total}
     </text>
   );
