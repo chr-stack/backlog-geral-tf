@@ -349,6 +349,64 @@ export function BacklogDashboard() {
           </motion.div>
         )}
 
+        {/* Reason by age */}
+        <Section
+          title="Motivos de contato por idade do backlog"
+          subtitle="Top motivos distribuídos por faixa de dias"
+        >
+          <Card>
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Filtrar por idade:</span>
+              <select
+                value={reasonAgeFilter}
+                onChange={(e) => setReasonAgeFilter(e.target.value as AgeBucket | "all")}
+                className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm outline-none focus:border-primary"
+              >
+                <option value="all">Todas as idades</option>
+                {BUCKETS.map((b) => (
+                  <option key={b} value={b}>
+                    {BUCKET_LABEL[b]}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="h-[380px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={reasonChartData} layout="vertical" margin={{ left: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis
+                    dataKey="name"
+                    type="category"
+                    stroke="var(--muted-foreground)"
+                    fontSize={11}
+                    width={180}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  {BUCKETS.map((b) => (
+                    <Bar
+                      key={b}
+                      dataKey={b}
+                      stackId="a"
+                      fill={BUCKET_COLORS[b]}
+                      name={BUCKET_LABEL[b]}
+                    >
+                      <LabelList dataKey={b} content={<StackTotalLabel />} />
+                    </Bar>
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </Section>
+
         {/* Charts grid */}
         <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
           <Card className="lg:col-span-2">
@@ -526,64 +584,6 @@ export function BacklogDashboard() {
             </div>
           </Card>
         </div>
-
-        {/* Reason by age */}
-        <Section
-          title="Motivos de contato por idade do backlog"
-          subtitle="Top motivos distribuídos por faixa de dias"
-        >
-          <Card>
-            <div className="mb-3 flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">Filtrar por idade:</span>
-              <select
-                value={reasonAgeFilter}
-                onChange={(e) => setReasonAgeFilter(e.target.value as AgeBucket | "all")}
-                className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm outline-none focus:border-primary"
-              >
-                <option value="all">Todas as idades</option>
-                {BUCKETS.map((b) => (
-                  <option key={b} value={b}>
-                    {BUCKET_LABEL[b]}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="h-[380px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={reasonChartData} layout="vertical" margin={{ left: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
-                  <YAxis
-                    dataKey="name"
-                    type="category"
-                    stroke="var(--muted-foreground)"
-                    fontSize={11}
-                    width={180}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      background: "var(--popover)",
-                      border: "1px solid var(--border)",
-                      borderRadius: 12,
-                    }}
-                  />
-                  <Legend wrapperStyle={{ fontSize: 12 }} />
-                  {BUCKETS.map((b) => (
-                    <Bar
-                      key={b}
-                      dataKey={b}
-                      stackId="a"
-                      fill={BUCKET_COLORS[b]}
-                      name={BUCKET_LABEL[b]}
-                    >
-                      <LabelList dataKey={b} content={<StackTotalLabel />} />
-                    </Bar>
-                  ))}
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-        </Section>
 
         {/* Filters + Table */}
         <Section
