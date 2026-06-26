@@ -765,17 +765,26 @@ function StackTotalLabel(props: any) {
       ? row.total
       : BUCKETS.reduce((s, b) => s + (Number(row[b]) || 0), 0);
   if (!total) return null;
+  const segValue = Number(row[lastBucket]) || 0;
+  const w = Number(width);
+  const xn = Number(x);
+  const yn = Number(y);
+  const hn = Number(height);
+  const pxPerUnit = segValue > 0 ? w / segValue : 0;
+  const fullBarWidth = pxPerUnit > 0 ? total * pxPerUnit : w;
+  const fullBarStart = xn + w - fullBarWidth;
+  const centerX = fullBarStart + fullBarWidth / 2;
   const text = String(total);
   const approxTextWidth = text.length * 7;
-  if (Number(width) < approxTextWidth + 10) {
+  if (fullBarWidth < approxTextWidth + 8) {
     return (
-      <text x={Number(x) + Number(width) + 6} y={Number(y) + Number(height) / 2} dy={4} fill="var(--foreground)" fontSize={11} fontWeight={600} textAnchor="start">
+      <text x={xn + w + 6} y={yn + hn / 2} dy={4} fill="var(--foreground)" fontSize={11} fontWeight={700} textAnchor="start">
         {total}
       </text>
     );
   }
   return (
-    <text x={Number(x) + Number(width) - 6} y={Number(y) + Number(height) / 2} dy={4} fill="var(--primary-foreground)" fontSize={11} fontWeight={600} textAnchor="end">
+    <text x={centerX} y={yn + hn / 2} dy={4} fill="var(--primary-foreground)" fontSize={11} fontWeight={700} textAnchor="middle">
       {total}
     </text>
   );
