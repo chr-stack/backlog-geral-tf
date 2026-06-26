@@ -266,23 +266,14 @@ export function BacklogDashboard() {
         </header>
 
         {/* KPIs */}
-        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
-          <Kpi
-            label="Tickets em backlog"
-            value={stats.total}
-            icon={<Inbox className="h-5 w-5" />}
-          />
-          <Kpi
-            label="Críticos 60+ dias"
-            value={stats.critical.length}
-            icon={<Flame className="h-5 w-5" />}
-            tone={stats.critical.length > 0 ? "danger" : "ok"}
-          />
-          <Kpi
-            label="Atendentes ativos"
-            value={stats.agents.length}
-            icon={<Users className="h-5 w-5" />}
-          />
+        <div className="mt-8 flex justify-center">
+          <div className="w-full max-w-md">
+            <Kpi
+              label="Tickets em backlog"
+              value={stats.total}
+              icon={<Inbox className="h-5 w-5" />}
+            />
+          </div>
         </div>
 
         {/* Age buckets */}
