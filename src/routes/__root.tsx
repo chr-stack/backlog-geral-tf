@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Backlog" },
+      { name: "description", content: "Agent Dashboard provides a comprehensive overview of your team's backlog, agent assignments, contact reasons, and SLA status." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Backlog" },
+      { property: "og:description", content: "Agent Dashboard provides a comprehensive overview of your team's backlog, agent assignments, contact reasons, and SLA status." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Backlog" },
+      { name: "twitter:description", content: "Agent Dashboard provides a comprehensive overview of your team's backlog, agent assignments, contact reasons, and SLA status." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/607fe3e4-aa00-4beb-ad71-5e68eaad3919/id-preview-37123773--01c0359c-2167-4814-85e2-73b85d8321a1.lovable.app-1782445916218.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/607fe3e4-aa00-4beb-ad71-5e68eaad3919/id-preview-37123773--01c0359c-2167-4814-85e2-73b85d8321a1.lovable.app-1782445916218.png" },
     ],
     links: [
       {
