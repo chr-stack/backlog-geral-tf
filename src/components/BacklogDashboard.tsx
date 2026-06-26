@@ -398,7 +398,7 @@ export function BacklogDashboard() {
                       fill={BUCKET_COLORS[b]}
                       name={BUCKET_LABEL[b]}
                     >
-                      <LabelList dataKey={b} content={<StackTotalLabel />} />
+                      <LabelList dataKey={b} content={<StackTotalLabel bucket={b} rows={reasonChartData} />} />
                     </Bar>
                   ))}
                 </BarChart>
@@ -439,7 +439,7 @@ export function BacklogDashboard() {
                       fill={BUCKET_COLORS[b]}
                       name={BUCKET_LABEL[b]}
                     >
-                      <LabelList dataKey={b} content={<StackTotalLabel />} />
+                      <LabelList dataKey={b} content={<StackTotalLabel bucket={b} rows={stats.agentBuckets} />} />
                     </Bar>
                   ))}
                 </BarChart>
@@ -755,11 +755,11 @@ function ChannelLabel(props: any) {
 }
 
 function StackTotalLabel(props: any) {
-  const { x, y, width, height, dataKey } = props;
-  const row = props.payload ?? props;
+  const { x, y, width, height, bucket, rows, index } = props;
+  const row = props.payload ?? rows?.[index] ?? props;
   if (!row || typeof row !== "object") return null;
   const lastBucket = [...BUCKETS].reverse().find((b) => (Number(row[b]) || 0) > 0);
-  if (!lastBucket || dataKey !== lastBucket) return null;
+  if (!lastBucket || bucket !== lastBucket) return null;
   const total =
     typeof row.total === "number"
       ? row.total
