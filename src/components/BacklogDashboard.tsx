@@ -398,7 +398,7 @@ export function BacklogDashboard() {
                       fill={BUCKET_COLORS[b]}
                       name={BUCKET_LABEL[b]}
                     >
-                      <LabelList dataKey={b} content={<StackTotalLabel bucket={b} rows={reasonChartData} />} />
+                      <LabelList dataKey={b} content={(props) => <StackTotalLabel {...props} bucket={b} rows={reasonChartData} />} />
                     </Bar>
                   ))}
                 </BarChart>
@@ -439,7 +439,7 @@ export function BacklogDashboard() {
                       fill={BUCKET_COLORS[b]}
                       name={BUCKET_LABEL[b]}
                     >
-                      <LabelList dataKey={b} content={<StackTotalLabel bucket={b} rows={stats.agentBuckets} />} />
+                      <LabelList dataKey={b} content={(props) => <StackTotalLabel {...props} bucket={b} rows={stats.agentBuckets} />} />
                     </Bar>
                   ))}
                 </BarChart>
